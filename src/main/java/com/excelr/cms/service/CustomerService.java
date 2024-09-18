@@ -24,4 +24,23 @@ public class CustomerService {
 		
 	}
 
+	public void deleteCustomer(int cno) {
+		custRepo.deleteById(cno);	
+	}
+
+	public Customer getCustomer(int cno) {
+		return custRepo.findById(cno).get();
+	}
+
+	public void updateCustomer(int cno, Customer customer) {
+		Customer customerFromDb=getCustomer(cno);
+		customerFromDb.setEmail(customer.getEmail());
+		customerFromDb.setFirstName(customer.getFirstName());
+		customerFromDb.setLastName(customer.getLastName());
+		customerFromDb.setPhone(customer.getPhone());
+		custRepo.save(customerFromDb);
+		
+		
+	}
+
 }
