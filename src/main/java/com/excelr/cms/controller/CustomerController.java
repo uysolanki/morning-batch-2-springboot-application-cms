@@ -1,5 +1,6 @@
 package com.excelr.cms.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.excelr.cms.entity.Customer;
 import com.excelr.cms.service.CustomerService;
@@ -67,4 +69,22 @@ public class CustomerController {
 		customerService.updateCustomer(cno,customer);
 		return "redirect:/";
 	}
+	@RequestMapping(value = "/403")
+	public ModelAndView accesssDenied(Principal user) {
+
+		ModelAndView model = new ModelAndView();
+
+		if (user != null) {
+			model.addObject("msg", "Hi " + user.getName() 
+			+ ", you do not have permission to access this page!");
+		} else {
+			model.addObject("msg", 
+			    "you do not have permission to access this page!");
+		}
+
+		model.setViewName("403");
+		return model;
+
+	}
+
 }
