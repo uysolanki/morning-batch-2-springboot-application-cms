@@ -2,10 +2,14 @@ package com.excelr.cms.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -37,6 +41,25 @@ protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //		.withUser("magan")
 //		.password("gadael")		// cleartext
 //		.authorities("USER");
+		auth.authenticationProvider(myAuthenticationProvider());
+}
+
+@Bean
+public AuthenticationProvider myAuthenticationProvider() {
+	DaoAuthenticationProvider myDao=new DaoAuthenticationProvider();
+	myDao.setUserDetailsService(mySetUserDetailsService());
+	myDao.setPasswordEncoder(mySetPasswordEncoder());
+	return myDao;
+}
+
+@Bean
+public PasswordEncoder mySetPasswordEncoder() {
+	return new BCryptPasswordEncoder();
+}
+
+@Bean
+public UserDetailsService mySetUserDetailsService() {
+	return new MyUserDetailsService();
 }
 
 //Authorisation code
